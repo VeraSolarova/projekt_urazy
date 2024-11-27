@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from urazy.models import Vek, Pohlavi
-import plotly.express as px
+
 
 
 # Create your views here.
