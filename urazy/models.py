@@ -1,14 +1,9 @@
 from django.db import models
-import pandas as pd
 
-
-# Create your models here.
 #PS C:\Users\Student\python\projekt_urazy> pip freeze > r.txt  -ulozi vsechny pouzite knihovny to textoveho soubru
 #PS C:\Users\Student\python\projekt_urazy> pip install -r r.txt  - naistaluje vsehny ppouzite knihovny ze souboru txt
 
 # agregovana data úrazů:  Počty za jednotivé roky přepočtené na 100 000 obyvatel ČR, kategorie, pohlaví, věku nebo regionu
-
-
 
 class Pohlavi(models.Model):
     pohlavi = models.CharField(max_length=4)
@@ -33,3 +28,5 @@ class Zpusob(models.Model):
     
     def __str__(self):
         return f"způsob: {self.zpusob}: {self.rok}"
+    
+

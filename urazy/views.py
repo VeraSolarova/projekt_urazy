@@ -1,31 +1,18 @@
 from django.shortcuts import render, get_object_or_404
 from urazy.models import Vek, Pohlavi, Zpusob
 
-
-"""def index(request):
-    vek = Vek.objects.all() # django dyntaxe pro databazove dotazy
-    pohlavi = Pohlavi.objects.all()
-    context = {'vek': vek, 'pohlavi': pohlavi}
-
-    return render(request, 'urazy/index.html', context)"""
-
 def index(request):
     kategorie = [
         {"nazev": "Dle věku", "url_name": "vek"},
         {"nazev": "Dle pohlaví", "url_name": "pohlavi"},
         {"nazev": "Dle způsobu", "url_name": "zpusob"},
     ]
-    return render(request, 'urazy/index.html', {"kategorie": kategorie})
+    return render(request, 'urazy/_layout.html', {"kategorie": kategorie})
 
 def vek(request):
-    # Načteme všechna data
     vek_data = Vek.objects.all()
-
-    # Shromáždíme všechny unikátní roky
-    years = vek_data.values_list('rok', flat=True).distinct().order_by('rok')
-
-    # Shromáždíme data pro každou věkovou kategorii
-    age_groups = Vek.objects.values('vek').distinct()  # Získáme všechny unikátní věkové kategorie
+    years = vek_data.values_list('rok', flat=True).distinct().order_by('rok') #všechny unikátní roky
+    age_groups = Vek.objects.values('vek').distinct()  #všechny unikátní věkové kategorie
 
     context = {
         'vek_data': vek_data,
@@ -36,14 +23,10 @@ def vek(request):
     return render(request, "urazy/vek.html", context)
 
 def pohlavi(request):
-    # Načteme všechna data
+    
     pohlavi_data = Pohlavi.objects.all()
-
-    # Shromáždíme všechny unikátní roky
     years = pohlavi_data.values_list('rok', flat=True).distinct().order_by('rok')
-
-    # Shromáždíme data pro každou věkovou kategorii
-    gender_groups = Pohlavi.objects.values('pohlavi').distinct()  # Získáme všechny unikátní věkové kategorie
+    gender_groups = Pohlavi.objects.values('pohlavi').distinct()  
 
     context = {
         'pohlavi_data': pohlavi_data,
@@ -55,14 +38,9 @@ def pohlavi(request):
 
 
 def zpusob(request):
-    # Načteme všechna data
     zpusob_data = Zpusob.objects.all()
-
-    # Shromáždíme všechny unikátní roky
     years = zpusob_data.values_list('rok', flat=True).distinct().order_by('rok')
-
-    # Shromáždíme data pro každou věkovou kategorii
-    cause_groups = Pohlavi.objects.values('zpusob').distinct()  # Získáme všechny unikátní věkové kategorie
+    cause_groups = Zpusob.objects.values('zpusob').distinct()  # Získáme všechny unikátní věkové kategorie
 
     context = {
         'zpusob_data': zpusob_data,
@@ -74,7 +52,7 @@ def zpusob(request):
 
 
 def vek_graf(request):
-    # Získání dat
+ 
     vek_data = Vek.objects.all()
 
     # Unikátní roky a věkové skupiny
@@ -107,3 +85,4 @@ def vek_graf(request):
         "years": years,
         "vek_data": vek_data
     })
+

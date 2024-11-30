@@ -57,7 +57,7 @@ ROOT_URLCONF = '_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],  # Přidání vlastního adresáře šablon
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -65,10 +65,16 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'urazy.context_processors.kategorie_context',  # Přidání vlastního procesoru
             ],
         },
     },
 ]
+
+
+
+
+
 
 WSGI_APPLICATION = '_project.wsgi.application'
 
