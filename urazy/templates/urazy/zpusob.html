@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Úrazy - Detail</title>
+</head>
+<body>
+    <h1>Přehled úrazů dle věkových skupin</h1>
+
+    <a href="{% url 'index' %}">Zpět na úvodní stránku</a>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Věk</th>
+                {% for rok in years %}
+                    <th>{{ rok }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for age_group in age_groups %}
+                <tr>
+                    <td>{{ age_group.vek }}</td>  <!-- Věk -->
+                    {% for rok in years %}
+                        <td>
+                            {% for data in vek_data %}
+                                {% if data.vek == age_group.vek and data.rok == rok %}
+                                    {{ data.pocet }}  <!-- Počet pro daný rok a věkovou skupinu -->
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+   
+
+    
+
+    
+
+
+
+</body>
+</html>

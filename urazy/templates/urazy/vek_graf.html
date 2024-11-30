@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Úrazy - Detail</title>
+</head>
+<body>
+    <h1>Detailní přehled úrazů</h1>
+
+    <h2>Pohlaví</h2>
+    <ul>
+        {% for item in pohlavi_data %}
+            <li>{{ item.pohlavi }} - rok: {{ item.rok }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Věkové kategorie</h2>
+    <ul>
+        {% for item in vek_data %}
+            <li>Věk: {{ item.vek }} - rok: {{ item.rok }}</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'urazy_uvod' %}">Zpět na úvodní stránku</a>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Věk</th>
+                {% for rok in years %}
+                    <th>{{ rok }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for age_group in age_groups %}
+                <tr>
+                    <td>{{ age_group.vek }}</td>  <!-- Věk -->
+                    {% for rok in years %}
+                        <td>
+                            {% for data in vek_data %}
+                                {% if data.vek == age_group.vek and data.rok == rok %}
+                                    {{ data.pocet }}  <!-- Počet pro daný rok a věkovou skupinu -->
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Graf úrazů podle věku a roku</h2>
+    <h1>Graf úrazů podle věku a roku</h1>
+
+    <!-- Graf -->
+    <img src="{{ chart_url }}" alt="Graf úrazů" />
+    
+    <!-- Tabulka dat -->
+    <h2>Tabulka dat</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Věk</th>
+                {% for rok in years %}
+                    <th>{{ rok }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in vek_data %}
+                <tr>
+                    <td>{{ data.vek }}</td>
+                    {% for rok in years %}
+                        <td>
+                            {% with vek=data.vek rok=rok %}
+                                {{ vek_data.filter(vek=vek, rok=rok).first.pocet|default:0 }}
+                            {% endwith %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+
+
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+
+<h1>Řazení úrazů podle kategorií</h1>
+<h2><a href="{% url 'vek' %}">Dle věku</a></h2>
+
+<h2><a href="{% url 'pohlavi' %}">Dle pohlaví</a></h2>
+
+<h2><a href="{% url 'zpusob' %}">Dle způsobu</a></h2>
+
+seznam
+<ul>
+    {% for kategorie in kategorie %}
+        <li><a href="{% url kategorie.url_name %}">{{ kategorie.nazev }}</a></li>
+    {% endfor %}
+</ul>
+
+</html>
