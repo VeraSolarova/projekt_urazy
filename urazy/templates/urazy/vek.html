@@ -1,0 +1,36 @@
+{% extends 'urazy/_layout.html' %}
+{% block content %}      
+<h1>Přehled úrazů dle věkových skupin</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Věk</th>
+                {% for rok in years %}
+                    <th>{{ rok }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for age_group in age_groups %}
+                <tr>
+                    <td>{{ age_group.vek }}</td> 
+                    {% for rok in years %}
+                        <td>
+                            <!-- forcyklus vyplni tabulku -->.
+                            {% for data in vek_data %}
+                                {% if data.vek == age_groups.vek and data.rok == rok %}
+                                <!-- zapiš hodnutu data.pocet  (Objekt vek ma rok, pocet, vek), pokud se shodují hodnoty veku s vek ve sloupcich <td>{{ age_group.vek }}</td> a zaroven se shoduji hodnoty roku s roky ve sloupcich <th>{{ rok }}</th>  -->.
+                                    {{ data.pocet }}  
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+<img src="data:image/png;base64,{{ graph_url }}" alt="Sloupcový graf">
+{% endblock %}
+</body>
+</html>

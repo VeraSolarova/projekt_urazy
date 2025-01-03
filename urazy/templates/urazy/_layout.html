@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static '_layout.css' %}"> 
+    <title>Úrazy v ČR</title>
+  </head>
+  <body>
+    <header>
+      <h1>Úrazy v ČR</h1>
+      <nav>
+          <ul>
+              {% for link in navigation_links %}
+                  <li><a class="layout-link" href="{{ link.url }}">{{ link.name }}</a></li>
+              {% endfor %}
+          </ul>
+      </nav>
+  </header>
+    <main>
+      {% block content %}
+      
+      {% endblock %}
+    </main>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+{% extends 'urazy/_layout.html' %}
+{% block content %}         
+    <h1>Přehled úrazů dle pohlaví</h1>
+    <table border="2">
+        <thead>
+            <tr>
+                <th>Pohlaví</th>
+                {% for rok in years %}
+                    <th>{{ rok }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for gender_group in gender_groups %}
+                <tr>
+                    <td>{{ gender_group.pohlavi }}</td> 
+                    {% for rok in years %}
+                        <td>
+                            {% for data in pohlavi_data %}
+                                {% if data.pohlavi == gender_group.pohlavi and data.rok == rok %}
+                                    {{ data.pocet }} 
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,8 @@
+.env
+.vscode
+vek_.xlsx
+zpusob_.xlsx
+pohlavi_.xlsx
+upload_pohlavi.py
+upload_vek.py
+upload_zposob.py

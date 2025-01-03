@@ -1,0 +1,30 @@
+{% extends 'urazy/_layout.html' %}
+{% block content %}  
+<h1>Přehled úrazů dle příčiny zranění</h1>
+    <table border="2">
+        <thead>
+            <tr>
+                <th>Zpusob</th>
+                {% for rok in years %}
+                    <th>{{ rok }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for cause_group in cause_groups %}
+                <tr>
+                    <td>{{ cause_group.zpusob }}</td> 
+                    {% for rok in years %}
+                        <td>
+                            {% for data in zpusob_data %}
+                                {% if data.zpusob == cause_group.zpusob and data.rok == rok %}
+                                    {{ data.pocet }} 
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
