@@ -7,24 +7,24 @@ from django.db import models
 
 
 class Pohlavi(models.Model):
-    pohlavi = models.CharField(max_length=4)
-    rok = models.IntegerField(null=True, blank=True, default=None)
-    pocet = models.IntegerField(null=True, blank=True, default=None)  
+    pohlavi = models.CharField(max_length=4) 
+    rok = models.IntegerField(null=True, blank=True, default=None) 
+    pocet = models.IntegerField(null=True, blank=True, default=None)   
 
     def __str__(self):
         return f"{self.pohlavi}: {self.rok}"
 
 class Vek(models.Model):
-    vek = models.CharField(max_length=10) 
-    rok = models.IntegerField(null=True, blank=True, default=None)
-    pocet = models.IntegerField(null=True, blank=True, default=None)   
+    vek = models.CharField(max_length=10) # (vekove kategorie: 0-9, 10-19, neuvedeno, ..)
+    rok = models.IntegerField(null=True, blank=True, default=None) # (roky: 2019, 2022, ..)
+    pocet = models.IntegerField(null=True, blank=True, default=None) # (počty úrazů: 20283, 33559, ..)
     
     def __str__(self):
         return f"věk: {self.vek}: {self.rok}"
     
 class Zpusob(models.Model):
     zpusob = models.CharField(max_length=7)  
-    rok = models.IntegerField(null=True, blank=True, default=None)
+    rok = models.IntegerField(null=True, blank=True, default=None) 
     pocet = models.IntegerField(null=True, blank=True, default=None)   
     
     def __str__(self):
