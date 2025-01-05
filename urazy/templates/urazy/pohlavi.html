@@ -1,30 +1,40 @@
 {% extends 'urazy/_layout.html' %}
-{% block content %}         
-    <h1>Přehled úrazů dle pohlaví</h1>
-    <table border="2">
-        <thead>
+
+{% block content %}
+<h1>Přehled úrazů dle věkových skupin</h1>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Pohlaví</th>
+            {% for rok in roky %}
+                <th>{{ rok }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in kategorie %}
             <tr>
-                <th>Pohlaví</th>
-                {% for rok in years %}
-                    <th>{{ rok }}</th>
+                <td>{{ item.pohlavi }}</td> 
+                {% for rok in roky %}
+                    <td>
+                        {% for hodnota in data %}
+                            {% if hodnota.pohlavi == item.pohlavi and hodnota.rok == rok %}
+                                {{ hodnota.pocet }}   
+                                <!-- zapiše hodnutu data.pocet (Objekt vek ma rok, pocet, vek),
+                                  pokud se shodují hodnoty veku s vek ve sloupcich <td>{{ age_group.vek }}</td>
+                                   a zaroven se shoduji hodnoty roku s roky ve sloupcich <th>{{ rok }}</th>  -->
+                            {% endif %}
+                        {% endfor %}
+                    </td>
                 {% endfor %}
             </tr>
-        </thead>
-        <tbody>
-            {% for gender_group in gender_groups %}
-                <tr>
-                    <td>{{ gender_group.pohlavi }}</td> 
-                    {% for rok in years %}
-                        <td>
-                            {% for data in pohlavi_data %}
-                                {% if data.pohlavi == gender_group.pohlavi and data.rok == rok %}
-                                    {{ data.pocet }} 
-                                {% endif %}
-                            {% endfor %}
-                        </td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        {% endfor %}
+    </tbody>
+</table>
+
+<img src="data:image/png;base64,{{ obrazek_grafu }}" alt="Sloupcový graf">
 {% endblock %}
+    
+</body>
+</html>

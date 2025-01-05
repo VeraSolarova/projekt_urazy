@@ -1,41 +1,40 @@
 {% extends 'urazy/_layout.html' %}
-{% block content %}      
+
+{% block content %}
 <h1>Přehled úrazů dle věkových skupin</h1>
-    <table border="1">
-        <thead>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Věk</th>
+            {% for rok in roky %}
+                <th>{{ rok }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in kategorie %}
             <tr>
-                <th>Věk</th>
-                {% for rok in vek_roky %}
-                    <th>{{ rok }}</th>
+                <td>{{ item.vek }}</td> 
+                {% for rok in roky %}
+                    <td>
+                        {% for hodnota in data %}
+                            {% if hodnota.vek == item.vek and hodnota.rok == rok %}
+                                {{ hodnota.pocet }}   
+                                <!-- zapiše hodnutu data.pocet (Objekt vek ma rok, pocet, vek),
+                                  pokud se shodují hodnoty veku s vek ve sloupcich <td>{{ age_group.vek }}</td>
+                                   a zaroven se shoduji hodnoty roku s roky ve sloupcich <th>{{ rok }}</th>  -->
+                            {% endif %}
+                        {% endfor %}
+                    </td>
                 {% endfor %}
             </tr>
-        </thead>
-        <tbody>
-            {% for vekKategorie in vek_vekKategorie %}
-                <tr>
-                    <td>{{ vekKategorie.vek }}</td> 
-                    {% for rok in vek_roky %}
-                        <td>
-                            {% for data in vek_data %}
-                                {% if data.vek == vekKategorie.vek and data.rok == rok %}
-                                    {{ data.pocet }}  
-                                {% endif %}
-                            {% endfor %}
-                        </td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <img src="data:image/png;base64,{{ graph_url }}" alt="Sloupcový graf">
+        {% endfor %}
+    </tbody>
+</table>
+
+<img src="data:image/png;base64,{{ obrazek_grafu }}" alt="Sloupcový graf">
 {% endblock %}
-   
-
     
-
-    
-
-
-
 </body>
 </html>

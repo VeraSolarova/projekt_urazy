@@ -14,22 +14,26 @@ def index(request):
 
 def vek(request):
     # Příprava dat pro tabulku
-    vek_data = Vek.objects.all() #(všechna data - trida Vek ma atributy vek, rok, pocet )
-    vek_roky = vek_data.values_list('rok', flat=True).distinct().order_by('rok') #všechny unikátní roky
-    vek_vekKategorie = Vek.objects.values('vek').distinct()  #všechny unikátní věkové kategorie
+    data = Vek.objects.all()   #(všechna data - trida Vek ma atributy vek, rok, pocet )
 
-
+    # Unikátní roky a věkové kategorie
+    roky = data.values_list('rok', flat=True).distinct().order_by('rok') #všechny unikátní roky
+    kategorie = Vek.objects.values('vek').distinct()
+    
     # Příprava dat pro graf
-    data_by_year = {year: {item.vek: item.pocet for item in vek_data.filter(rok=year)} for year in vek_roky }
-    years_g = list(vek_roky)
-    age_groups_g = [group['vek'] for group in vek_vekKategorie]
+    data_podle_roku = {rok: {item.vek: item.pocet for item in data.filter(rok=rok)} for rok in roky} 
+        #složený dictionary. Vnější klíč = rok: jeho hodnotou je opět dictionary 
+        # věková kategorie item.vek:(vnitřní klíč) a jeho hodnotou jsou počty úrazů item.pocet
+         
+    roky_graf = list(roky)
+    kategorie_graf = list(data.values_list('vek', flat=True).distinct())
 
     # Vykreslení grafu
     fig, ax = plt.subplots(figsize=(12, 8))
-    bar_width = 0.8/len(vek_vekKategorie)
-    x = range(len(vek_roky))
+    sirka_sloupce = 0.8 / len(kategorie)
+    pozice = range(len(roky))
 
-    colors = [
+    barvy = [
         (0.7, 0.0, 0.0),  # Tlumená červená
         (0.8, 0.4, 0.0),  # Oranžová
         (0.9, 0.9, 0.0),  # Žlutá
@@ -43,53 +47,163 @@ def vek(request):
         (0.5, 0.6, 0.7),  # Světle tyrkysová
     ]
 
-    for i, age_group in enumerate(age_groups_g):
-        values = [data_by_year[year].get(age_group, 0) for year in years_g]
+    for i, skupina in enumerate(kategorie_graf):
+        hodnoty = [data_podle_roku[rok].get(skupina, 0) for rok in roky_graf]
         ax.bar(
-            [pos + i * bar_width for pos in x],
-            values,
-            bar_width,
-            label=age_group,
-            color=colors[i % len(colors)]
+            [pos + i * sirka_sloupce for pos in pozice],
+            hodnoty,
+            sirka_sloupce,
+            label=skupina,
+            color=barvy[i % len(barvy)]
         )
 
     # Nastavení os a popisků
-    ax.set_xlabel("Rok")
-    ax.set_ylabel("Počet")
-    ax.set_xticks([pos + bar_width * len(age_groups_g) / 2 for pos in x])
-    ax.set_xticklabels(years_g)
-    ax.set_title("Počet věkových skupin za roky")
-    ax.legend()
+    ax.set_xlabel("Roky")
+    ax.set_ylabel("Počet úrazů")
+    ax.set_xticks([pos + sirka_sloupce * len(kategorie_graf) / 2 for pos in pozice])
+    ax.set_xticklabels(roky_graf)
+    ax.set_title("Počet úrazů dle věkových kategorií")
+    ax.legend(title="Věkové kategorie")
 
     # Uložení grafu do obrázku
     buf = io.BytesIO()
     plt.tight_layout()
     plt.savefig(buf, format='png')
     buf.seek(0)
-    graph_url = base64.b64encode(buf.read()).decode('utf-8')
+    obrazek_grafu = base64.b64encode(buf.read()).decode('utf-8')
     buf.close()
 
+
     context = {
-        'vek_data': vek_data,
-        'vek_roky': vek_roky,
-        'vek_vekKategorie': vek_vekKategorie,
-        'graph_url': graph_url,
+        'data': data,
+        'roky': roky,  
+        'kategorie': kategorie,  
+        'obrazek_grafu': obrazek_grafu,  
     }
 
     return render(request, "urazy/vek.html", context)
+
+
+
+
+
+
+
+
+
+
 def pohlavi(request):
     
-    pohlavi_data = Pohlavi.objects.all()
-    years = pohlavi_data.values_list('rok', flat=True).distinct().order_by('rok')
-    gender_groups = Pohlavi.objects.values('pohlavi').distinct()  
+    data = Pohlavi.objects.all()
+    roky = data.values_list('rok', flat=True).distinct().order_by('rok')
+    kategorie = Pohlavi.objects.values('pohlavi').distinct()  
+
+    # Příprava dat pro graf
+    data_podle_roku = {rok: {item.pohlavi: item.pocet for item in data.filter(rok=rok)} for rok in roky} 
+        #složený dictionary. Vnější klíč = rok: jeho hodnotou je opět dictionary 
+        # věková kategorie item.vek:(vnitřní klíč) a jeho hodnotou jsou počty úrazů item.pocet
+         
+    roky_graf = list(roky)
+    kategorie_graf = list(data.values_list('pohlavi', flat=True).distinct())
+
+    # Vykreslení grafu
+    fig, ax = plt.subplots(figsize=(12, 8))
+    sirka_sloupce = 0.8 / len(kategorie)
+    pozice = range(len(roky))
+
+    barvy = [
+        (0.7, 0.0, 0.0),  # Tlumená červená
+        (0.8, 0.4, 0.0),  # Oranžová
+        (0.9, 0.9, 0.0),  # Žlutá
+        (0.0, 0.7, 0.0),  # Zelená
+        (0.0, 0.5, 0.7),  # Světle modrá
+        (0.0, 0.0, 1.0),  # Modrá
+        (0.5, 0.0, 0.5),  # Fialová
+        (0.6, 0.6, 0.6),  # Šedá
+        (0.9, 0.6, 0.7),  # Světle růžová
+        (0.3, 0.3, 0.8),  # Tlumená levandulová
+        (0.5, 0.6, 0.7),  # Světle tyrkysová
+    ]
+
+    for i, skupina in enumerate(kategorie_graf):
+        hodnoty = [data_podle_roku[rok].get(skupina, 0) for rok in roky_graf]
+        ax.bar(
+            [pos + i * sirka_sloupce for pos in pozice],
+            hodnoty,
+            sirka_sloupce,
+            label=skupina,
+            color=barvy[i % len(barvy)]
+        )
+
+    # Nastavení os a popisků
+    ax.set_xlabel("Roky")
+    ax.set_ylabel("Počet úrazů")
+    ax.set_xticks([pos + sirka_sloupce * len(kategorie_graf) / 2 for pos in pozice])
+    ax.set_xticklabels(roky_graf)
+    ax.set_title("Počet úrazů dle pohlaví")
+    ax.legend(title="M-Muž F-žena")
+
+    # Uložení grafu do obrázku
+    buf = io.BytesIO()
+    plt.tight_layout()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    obrazek_grafu = base64.b64encode(buf.read()).decode('utf-8')
+    buf.close()
+
 
     context = {
-        'pohlavi_data': pohlavi_data,
-        'years': years,
-        'gender_groups': gender_groups,
+        'data': data,
+        'roky': roky,
+        'kategorie': kategorie,
+        'obrazek_grafu': obrazek_grafu,  
     }
 
     return render(request, "urazy/pohlavi.html", context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def zpusob(request):
