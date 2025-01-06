@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from urazy.models import Vek, Pohlavi, Zpusob
+from urazy.models import Vek, Pohlavi, Zpusob, Zpusob_popis
 import matplotlib.pyplot as plt
 import io
 import base64
@@ -130,16 +130,45 @@ def pohlavi(request):
 
 
 def zpusob(request):
-    zpusob_data = Zpusob.objects.all()
-    years = zpusob_data.values_list('rok', flat=True).distinct().order_by('rok')
-    cause_groups = Zpusob.objects.values('zpusob').distinct()  # Získáme všechny unikátní věkové kategorie
+    data = Zpusob.objects.all()
+    roky = data.values_list('rok', flat=True).distinct().order_by('rok')   
+    kategorie = data.values("zpusob").distinct()
+    for kat in kategorie:
+        kat["label"] = Zpusob_popis(kat["zpusob"]).label
+        kat["index"] = index 
 
+
+
+
+    kategorie2 = data.values("zpusob").distinct()  
+    vsechny_hodnoty = []
+         
+    for i, skupina in enumerate(kategorie2):
+        hodnoty = []
+        for rok in roky:
+            pocet = data.filter(rok=rok, zpusob=skupina['zpusob'])
+            pocet = pocet.values_list('pocet', flat=True).first()
+            
+            if pocet is None:
+                pocet = 0
+            
+            hodnoty.append(pocet)
+        
+        vsechny_hodnoty.append(hodnoty)
+
+    context_data = []
+    for skupina, hodnoty in zip(kategorie, vsechny_hodnoty):
+        context_data.append({"zpusob": skupina["label"], "hodnoty": hodnoty})
+
+
+    obrazek_grafu = graf(roky, kategorie2, vsechny_hodnoty, "Graf podle zpusob", "zpusob", "zpusob")
+    
     context = {
-        'zpusob_data': zpusob_data,
-        'years': years,
-        'cause_groups': cause_groups,
+        'data': data,
+        'roky': roky,  
+        'kategorie': context_data,  
+        'obrazek_grafu': obrazek_grafu,
+        'vsechny_hodnoty': vsechny_hodnoty,
     }
 
     return render(request, "urazy/zpusob.html", context)
-
-

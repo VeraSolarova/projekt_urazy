@@ -1,30 +1,25 @@
 {% extends 'urazy/_layout.html' %}
 {% block content %}  
-<h1>Přehled úrazů dle příčiny zranění</h1>
-    <table border="2">
-        <thead>
-            <tr>
-                <th>Zpusob</th>
-                {% for rok in years %}
-                    <th>{{ rok }}</th>
-                {% endfor %}
-            </tr>
-        </thead>
+<table border="1">
+    <    <thead>
+        <tr>
+            <th>zpusob</th>
+            {% for rok in roky %}
+                <th>{{ rok }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
         <tbody>
-            {% for cause_group in cause_groups %}
+            {% for kategorie in kategorie %}
                 <tr>
-                    <td>{{ cause_group.zpusob }}</td> 
-                    {% for rok in years %}
-                        <td>
-                            {% for data in zpusob_data %}
-                                {% if data.zpusob == cause_group.zpusob and data.rok == rok %}
-                                    {{ data.pocet }} 
-                                {% endif %}
-                            {% endfor %}
-                        </td>
+                    <td>{{ kategorie.zpusob }}</td>
+                    {% for hodnota in kategorie.hodnoty %}
+                        <td>{{ hodnota }}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+
+<img src="data:image/png;base64,{{ obrazek_grafu }}" alt="Sloupcový graf">
 {% endblock %}
