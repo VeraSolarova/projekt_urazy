@@ -92,44 +92,14 @@ def vek(request):
     return render(request, "urazy/vek.html", context)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def pokus_tabulka(data: QuerySet, objekt: type, unikatni_atribut: str):
     roky = list(data.values_list('rok', flat=True).distinct().order_by('rok'))  # unikátní roky [2019,2020,...]   
     kategorie = objekt.objects.values(unikatni_atribut).distinct()  # např. list pohlaví [F, M]
     return roky, kategorie
 
-def pokus_graf(roky, data: QuerySet, kategorie, vsechny_hodnoty, nadpis_grafu: str, nadpis_legendy: str, unikatni_atribut):
+def pokus_graf(roky, data: QuerySet, kategorie2, vsechny_hodnoty, nadpis_grafu: str, nadpis_legendy: str, unikatni_atribut):
     fig, ax = plt.subplots(figsize=(12, 8))
-    sirka_sloupce = 0.8 / len(kategorie)
+    sirka_sloupce = 0.8 / len(kategorie2)
     pozice = range(len(roky))
 
     barvy = [
@@ -151,13 +121,13 @@ def pokus_graf(roky, data: QuerySet, kategorie, vsechny_hodnoty, nadpis_grafu: s
             [pos + i * sirka_sloupce for pos in pozice],
             hodnoty,
             sirka_sloupce,
-            label=kategorie[i][unikatni_atribut],  # Oprava pro přístup k hodnotě 'vek', 'pohlavi', atd.
+            label=kategorie2[i][unikatni_atribut],  # Oprava pro přístup k hodnotě 'vek', 'pohlavi', atd.
             color=barvy[i % len(barvy)]
         )
 
     ax.set_xlabel("Roky")
     ax.set_ylabel("Počet úrazů")
-    ax.set_xticks([pos + sirka_sloupce * len(kategorie) / 2 for pos in pozice])
+    ax.set_xticks([pos + sirka_sloupce * len(kategorie2) / 2 for pos in pozice])
     ax.set_xticklabels(roky)
     ax.set_title(nadpis_grafu)
     ax.legend(title=nadpis_legendy)
@@ -173,13 +143,16 @@ def pokus_graf(roky, data: QuerySet, kategorie, vsechny_hodnoty, nadpis_grafu: s
 
 def pokus(request):
 
-    data = Vek.objects.all()
-    roky, kategorie = pokus_tabulka(data, Vek, "vek")
-    
+    data = Vek.objects.all()   #(všechna data - trida Vek ma atributy vek, rok, pocet )
+    roky = list(data.values_list('rok', flat=True).distinct().order_by('rok')) #všechny unikátní roky
+    kategorie = list(data.values_list('vek', flat=True).distinct()) #
+
+    kategorie2 = data.values("vek").distinct()  # např. list pohlaví [F, M]
+
 
     vsechny_hodnoty = []
 
-    for i, skupina in enumerate(kategorie):
+    for i, skupina in enumerate(kategorie2):
         hodnoty = []
         for rok in roky:
             # Opravená filtrace podle 'vek' a hodnoty z 'skupina'
@@ -193,7 +166,7 @@ def pokus(request):
         
         vsechny_hodnoty.append(hodnoty)
 
-    obrazek_grafu = pokus_graf(roky, data, kategorie, vsechny_hodnoty, "Graf podle veku", "Vekove kategorie", "vek")
+    obrazek_grafu = pokus_graf(roky, data, kategorie2, vsechny_hodnoty, "Graf podle veku", "Vekove kategorie", "vek")
 
     context = {
         'data': data,
@@ -203,156 +176,6 @@ def pokus(request):
     }
 
     return render(request, "urazy/pokus.html", context)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
