@@ -15,6 +15,51 @@ def index(request):
     ]
     return render(request, 'urazy/index.html', {"kategorie": kategorie})
 
+def graf(roky, kategorie2, vsechny_hodnoty, nadpis_grafu: str, nadpis_legendy: str, unikatni_atribut):
+    fig, ax = plt.subplots(figsize=(12, 8))
+    sirka_sloupce = 0.8 / len(kategorie2)
+    pozice = range(len(roky))
+
+    barvy = [
+        (0.7, 0.0, 0.0),  # Tlumená červená
+        (0.8, 0.4, 0.0),  # Oranžová
+        (0.9, 0.9, 0.0),  # Žlutá
+        (0.0, 0.7, 0.0),  # Zelená
+        (0.0, 0.5, 0.7),  # Světle modrá
+        (0.0, 0.0, 1.0),  # Modrá
+        (0.5, 0.0, 0.5),  # Fialová
+        (0.6, 0.6, 0.6),  # Šedá
+        (0.9, 0.6, 0.7),  # Světle růžová
+        (0.3, 0.3, 0.8),  # Tlumená levandulová
+        (0.5, 0.6, 0.7),  # Světle tyrkysová
+    ]
+
+    for i, hodnoty in enumerate(vsechny_hodnoty):
+        ax.bar(
+            [pos + i * sirka_sloupce for pos in pozice],
+            hodnoty,
+            sirka_sloupce,
+            label=kategorie2[i][unikatni_atribut],  # Oprava pro přístup k hodnotě 'vek', 'pohlavi', atd.
+            color=barvy[i % len(barvy)]
+        )
+
+    ax.set_xlabel("Roky")
+    ax.set_ylabel("Počet úrazů")
+    ax.set_xticks([pos + sirka_sloupce * len(kategorie2) / 2 for pos in pozice])
+    ax.set_xticklabels(roky)
+    ax.set_title(nadpis_grafu)
+    ax.legend(title=nadpis_legendy)
+
+    buf = io.BytesIO()
+    plt.tight_layout()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    obrazek_grafu = base64.b64encode(buf.read()).decode('utf-8')
+    buf.close()
+
+    return obrazek_grafu
+
+
 def vek(request):
     # Příprava dat pro tabulku
     data = Vek.objects.all()   #(všechna data - trida Vek ma atributy vek, rok, pocet )
@@ -97,49 +142,7 @@ def pokus_tabulka(data: QuerySet, objekt: type, unikatni_atribut: str):
     kategorie = objekt.objects.values(unikatni_atribut).distinct()  # např. list pohlaví [F, M]
     return roky, kategorie
 
-def pokus_graf(roky, data: QuerySet, kategorie2, vsechny_hodnoty, nadpis_grafu: str, nadpis_legendy: str, unikatni_atribut):
-    fig, ax = plt.subplots(figsize=(12, 8))
-    sirka_sloupce = 0.8 / len(kategorie2)
-    pozice = range(len(roky))
 
-    barvy = [
-        (0.7, 0.0, 0.0),  # Tlumená červená
-        (0.8, 0.4, 0.0),  # Oranžová
-        (0.9, 0.9, 0.0),  # Žlutá
-        (0.0, 0.7, 0.0),  # Zelená
-        (0.0, 0.5, 0.7),  # Světle modrá
-        (0.0, 0.0, 1.0),  # Modrá
-        (0.5, 0.0, 0.5),  # Fialová
-        (0.6, 0.6, 0.6),  # Šedá
-        (0.9, 0.6, 0.7),  # Světle růžová
-        (0.3, 0.3, 0.8),  # Tlumená levandulová
-        (0.5, 0.6, 0.7),  # Světle tyrkysová
-    ]
-
-    for i, hodnoty in enumerate(vsechny_hodnoty):
-        ax.bar(
-            [pos + i * sirka_sloupce for pos in pozice],
-            hodnoty,
-            sirka_sloupce,
-            label=kategorie2[i][unikatni_atribut],  # Oprava pro přístup k hodnotě 'vek', 'pohlavi', atd.
-            color=barvy[i % len(barvy)]
-        )
-
-    ax.set_xlabel("Roky")
-    ax.set_ylabel("Počet úrazů")
-    ax.set_xticks([pos + sirka_sloupce * len(kategorie2) / 2 for pos in pozice])
-    ax.set_xticklabels(roky)
-    ax.set_title(nadpis_grafu)
-    ax.legend(title=nadpis_legendy)
-
-    buf = io.BytesIO()
-    plt.tight_layout()
-    plt.savefig(buf, format='png')
-    buf.seek(0)
-    obrazek_grafu = base64.b64encode(buf.read()).decode('utf-8')
-    buf.close()
-
-    return obrazek_grafu
 
 def pokus(request):
 
@@ -166,7 +169,7 @@ def pokus(request):
         
         vsechny_hodnoty.append(hodnoty)
 
-    obrazek_grafu = pokus_graf(roky, data, kategorie2, vsechny_hodnoty, "Graf podle veku", "Vekove kategorie", "vek")
+    obrazek_grafu = graf(roky, kategorie2, vsechny_hodnoty, "Graf podle veku", "Vekove kategorie", "vek")
 
     context = {
         'data': data,
