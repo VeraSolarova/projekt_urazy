@@ -1,38 +1,37 @@
 {% extends 'urazy/_layout.html' %}
 
 {% block content %}
+  {% load static %} 
+  <link rel="stylesheet" href="{% static '_layout.css' %}">
 
-<h1>Přehled úrazů dle věkových skupin</h1>
+  <h1>Přehled četnosti úrazů dle pohlaví</h1>
 
-<table border="1">
+  <table>
     <thead>
-        <tr>
-            <th>Pohlaví</th>
-            {% for rok in roky %}
-                <th>{{ rok }}</th>
-            {% endfor %}
-        </tr>
+      <tr>
+        <th>Pohlaví</th>
+        {% for rok in roky %}
+          <th>{{ rok }}</th>
+        {% endfor %}
+      </tr>
     </thead>
     <tbody>
-        {% for item in kategorie %}
-            <tr>
-                <td>{{ item.pohlavi }}</td> 
-                {% for rok in roky %}
-                    <td>
-                        {% for hodnota in data %}
-                            {% if hodnota.pohlavi == item.pohlavi and hodnota.rok == rok %}
-                                {{ hodnota.pocet }}   
-                                <!-- zapiše hodnutu data.pocet (Objekt vek ma rok, pocet, vek),
-                                  pokud se shodují hodnoty veku s vek ve sloupcich <td>{{ age_group.vek }}</td>
-                                   a zaroven se shoduji hodnoty roku s roky ve sloupcich <th>{{ rok }}</th>  -->
-                            {% endif %}
-                        {% endfor %}
-                    </td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
+      {% for item in kategorie %}
+        <tr>
+          <td>{{ item.pohlavi }}</td> 
+          {% for rok in roky %}
+            <td>
+              {% for hodnota in data %}
+                {% if hodnota.pohlavi == item.pohlavi and hodnota.rok == rok %}
+                  {{ hodnota.pocet }}   
+                {% endif %}
+              {% endfor %}
+            </td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
     </tbody>
-</table>
+  </table>
 
-<img src="data:image/png;base64,{{ obrazek_grafu }}" alt="Sloupcový graf">
+  <img src="data:image/png;base64,{{ obrazek_grafu }}" alt="Sloupcový graf">
 {% endblock %}

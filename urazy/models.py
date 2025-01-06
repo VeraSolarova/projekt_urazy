@@ -28,7 +28,7 @@ class Zpusob_popis(models.TextChoices):
     V20_V29 = "V20_V29", "Jezdec na motocyklu zraněný při dopravní nehodě"
     V30_V39 = "V30_V39", "Člen osádky tříkolového motorového vozidla zraněný při dopravní nehodě"
     V40_V49 = "V40_V49", "Člen osádky osobního automobilu zraněný při dopravní nehodě"
-    V50_V59 = "V50_V59", "Člen osádky dodávkového nebo lehkého nákladního automobilu zraněný při dopravní nehodě"
+    V50_V59 = "V50_V59", "Člen osádky dodávkového či lehkého nákladního vozidla zraněný při dopravní nehodě"
     V60_V69 = "V60_V69", "Člen osádky těžkého nákladního vozidla zraněný při dopravní nehodě"
     V70_V79 = "V70_V79", "Člen osádky autobusu zraněný při dopravní nehodě"
     V80_V89 = "V80_V89", "Jiné nehody při pozemní dopravě"
@@ -40,7 +40,7 @@ class Zpusob_popis(models.TextChoices):
     W50_W64 = "W50_W64", "Vystavení životným mechanickým silám"
     W65_W74 = "W65_W74", "Náhodné (u)tonutí a potopení"
     W75_W84 = "W75_W84", "Jiná náhodná ohrožení dýchání"
-    W85_W99 = "W85_W99", "Vystavení elektrickému proudu, ozáření a extrémní okolní teplotě a tlaku vzduchu"
+    W85_W99 = "W85_W99", "Vystavení elektrickému proudu, ozáření, extrémní teplotě a tlaku vzduchu"
     X00_X09 = "X00_X09", "Vystavení kouři, ohni, dýmu a plamenů"
     X10_X19 = "X10_X19", "Kontakt s horkem a horkými látkami"
     X20_X29 = "X20_X29", "Kontakt s jedovatými živočichy a rostlinam"
@@ -53,7 +53,7 @@ class Zpusob_popis(models.TextChoices):
         return self.label
 
 class Zpusob(models.Model):
-    zpusob = models.CharField(max_length=7, choices=Zpusob_popis.choices,)
+    zpusob = models.CharField(max_length=7, choices=Zpusob_popis.choices)
     rok = models.IntegerField(null=True, blank=True, default=None)
     pocet = models.IntegerField(null=True, blank=True, default=None)
 

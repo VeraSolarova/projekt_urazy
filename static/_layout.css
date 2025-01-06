@@ -1,71 +1,97 @@
+:root {
+  --svetle-modra: #98bad6;
+  --svetle-seda: #445563;
+  --tmave-seda: #283037;
+}
+
 /*_layout.html*/
 
 body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to bottom, #98bad6, #fefefe 10vh);
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-  }
-  
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to bottom, var(--svetle-modra), #fefefe 10vh); 
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
 header {
-    display: flex;
-    justify-content: space-between; 
-    align-items: baseline;
-    padding: 3vw;
-    margin: 3vw; 
+  display: flex;
+  justify-content: space-between; 
+  align-items: baseline;
+  padding: 3vw;
+  margin: 3vw; 
 }
 
 h1 {
-    color: #445563;
-    font-size: 30px;
-    padding: 0;
-    margin: 0; 
+  color: var(--svetle-seda); 
+  font-size: 30px;
+  padding: 0;
+  margin: 0; 
 }
 
 h2 {
-  color: #445563;
+  color: var(--svetle-seda); 
   font-size: 20px;
   padding: 5px;
   margin: 5px; 
 }
 
 nav ul {
-    display: flex;
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    font-weight: bold;
-    transition: text-shadow 0.3s ease, color 0.3s ease;
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  font-weight: bold;
+  transition: text-shadow 0.3s ease, color 0.3s ease;
 }
 
 .layout-link {
-    color: #283037;
-    text-decoration: none;
-    padding: 3vw;
-    margin: 3vw;
-  }
+  color: var(--tmave-seda); /* Použití var() */
+  text-decoration: none;
+  padding: 3vw;
+  margin: 3vw;
+}
 
 .layout-link:visited {
-    color: #283037;         
-    text-decoration: none;  
-  }
+  color: #283037;         
+  text-decoration: none;  
+}
 
 .layout-link:hover {
-  color: #3e697f;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);  
+color: #3e697f;
+text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);  
 }
 
 /*index.html*/
 
 .index-introduction{
-  margin-left:  6vw;
-  margin-right: 6vw;
-  line-height: 1.5
+margin-left:  6vw;
+margin-right: 6vw;
+line-height: 1.5;
 }
 
 .index-ul{
-  list-style-type: none; 
-  padding:0;
-  margin: 0; 
+list-style-type: none; 
+padding:0;
+margin: 0; 
+}
+
+/*tabulky*/
+
+table{
+  width: 80%;
+  border-collapse: collapse; 
+  margin: 20px 0;
+  text-align: left;
+  border: 1px solid #00000000;
+}
+
+table th, table td {
+  border: 1px solid #000000;
+  padding: 3px;
+  text-align: center;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
 }

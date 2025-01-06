@@ -1,25 +1,31 @@
 {% extends 'urazy/_layout.html' %}
-{% block content %}  
-<table border="1">
-    <    <thead>
-        <tr>
-            <th>zpusob</th>
-            {% for rok in roky %}
-                <th>{{ rok }}</th>
-            {% endfor %}
-        </tr>
-    </thead>
-        <tbody>
-            {% for kategorie in kategorie %}
-                <tr>
-                    <td>{{ kategorie.zpusob }}</td>
-                    {% for hodnota in kategorie.hodnoty %}
-                        <td>{{ hodnota }}</td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 
-<img src="data:image/png;base64,{{ obrazek_grafu }}" alt="Sloupcový graf">
+{% block content %}
+  {% load static %} 
+  <link rel="stylesheet" href="{% static '_layout.css' %}">
+  
+  <h1>Četnosti úrazů dle způsobu vzniku</h1>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Způsob</th>
+        {% for rok in roky %}
+          <th>{{ rok }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for kategorie in kategorie %}
+        <tr>
+          <td>{{ kategorie.zpusob }}</td>
+          {% for hodnota in kategorie.hodnoty %}
+            <td>{{ hodnota }}</td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  
+  <img src="data:image/png;base64,{{ obrazek_grafu }}" alt="Sloupcový graf">
 {% endblock %}

@@ -3,7 +3,8 @@ from urazy.models import Vek, Pohlavi, Zpusob, Zpusob_popis
 import matplotlib.pyplot as plt
 import io
 import base64
-from django.db.models.query import QuerySet
+import matplotlib.cm as cm
+import matplotlib.colors as mcolors
 
 
 def index(request):
@@ -20,19 +21,8 @@ def graf(roky, kategorie2, vsechny_hodnoty, nadpis_grafu: str, nadpis_legendy: s
     sirka_sloupce = 0.8 / len(kategorie2)
     pozice = range(len(roky))
 
-    barvy = [
-        (0.7, 0.0, 0.0),  # Tlumená červená
-        (0.8, 0.4, 0.0),  # Oranžová
-        (0.9, 0.9, 0.0),  # Žlutá
-        (0.0, 0.7, 0.0),  # Zelená
-        (0.0, 0.5, 0.7),  # Světle modrá
-        (0.0, 0.0, 1.0),  # Modrá
-        (0.5, 0.0, 0.5),  # Fialová
-        (0.6, 0.6, 0.6),  # Šedá
-        (0.9, 0.6, 0.7),  # Světle růžová
-        (0.3, 0.3, 0.8),  # Tlumená levandulová
-        (0.5, 0.6, 0.7),  # Světle tyrkysová
-    ]
+    colormap = cm.get_cmap("tab20") 
+    barvy = [colormap(i / len(kategorie2)) for i in range(len(kategorie2))]
 
     for i, hodnoty in enumerate(vsechny_hodnoty):
         ax.bar(
@@ -61,7 +51,7 @@ def graf(roky, kategorie2, vsechny_hodnoty, nadpis_grafu: str, nadpis_legendy: s
 
 
 def vek(request):
-    data = Vek.objects.all()   
+    data = Vek.objects.filter(rok__gte=2015, rok__lte=2022)  
     roky = list(data.values_list('rok', flat=True).distinct().order_by('rok')) 
     kategorie = list(data.values_list('vek', flat=True).distinct()) 
     
@@ -96,7 +86,7 @@ def vek(request):
 
 def pohlavi(request):
     
-    data = Pohlavi.objects.all()
+    data = Pohlavi.objects.filter(rok__gte=2015, rok__lte=2022)
     roky = data.values_list('rok', flat=True).distinct().order_by('rok')
     kategorie = Pohlavi.objects.values('pohlavi').distinct()  
 
@@ -130,7 +120,8 @@ def pohlavi(request):
 
 
 def zpusob(request):
-    data = Zpusob.objects.all()
+    #data = Zpusob.objects.all()
+    data = Zpusob.objects.filter(rok__gte=2018, rok__lte=2022)
     roky = data.values_list('rok', flat=True).distinct().order_by('rok')   
     kategorie = data.values("zpusob").distinct()
     for kat in kategorie:
@@ -138,9 +129,13 @@ def zpusob(request):
         kat["index"] = index 
 
 
+    kategorie2 = []
+    for kat in kategorie:
+        kategorie2.append({
+            "zpusob": kat["zpusob"],
+            "label": Zpusob_popis(kat["zpusob"]).label  # Přidáme popisek jako nový klíč
+        })
 
-
-    kategorie2 = data.values("zpusob").distinct()  
     vsechny_hodnoty = []
          
     for i, skupina in enumerate(kategorie2):
@@ -161,12 +156,13 @@ def zpusob(request):
         context_data.append({"zpusob": skupina["label"], "hodnoty": hodnoty})
 
 
-    obrazek_grafu = graf(roky, kategorie2, vsechny_hodnoty, "Graf podle zpusob", "zpusob", "zpusob")
+    obrazek_grafu = graf(roky, kategorie2, vsechny_hodnoty, "Graf četnosti dle způsobu vzniku úrazu", "Způsoby", "label")
     
     context = {
         'data': data,
         'roky': roky,  
-        'kategorie': context_data,  
+        'kategorie': context_data,
+        'kategorie2': kategorie2,
         'obrazek_grafu': obrazek_grafu,
         'vsechny_hodnoty': vsechny_hodnoty,
     }
