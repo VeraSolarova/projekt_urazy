@@ -15,12 +15,15 @@
     <tbody>
         {% for vek in kategorie %}
             <tr>
-                <td>{{ vek }}</td>
+                <td>{{ vek }}</td> 
                 {% for rok in roky %}
                     <td>
                         {% for hodnota in data %}
-                            {% if hodnota.vek == vek and hodnota.rok == rok %}
-                                {{ hodnota.pocet }}
+                            {% if hodnota.vek == item.vek and hodnota.rok == rok %}
+                                {{ hodnota.pocet }}   
+                                <!-- zapiše hodnutu data.pocet (Objekt vek ma rok, pocet, vek),
+                                  pokud se shodují hodnoty veku s vek ve sloupcich <td>{{ age_group.vek }}</td>
+                                   a zaroven se shoduji hodnoty roku s roky ve sloupcich <th>{{ rok }}</th>  -->
                             {% endif %}
                         {% endfor %}
                     </td>
@@ -32,3 +35,4 @@
 
 <img src="data:image/png;base64,{{ obrazek_grafu }}" alt="Sloupcový graf">
 {% endblock %}
+
