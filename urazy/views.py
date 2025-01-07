@@ -4,8 +4,6 @@ import matplotlib.pyplot as plt
 import io
 import base64
 import matplotlib.cm as cm
-import matplotlib.colors as mcolors
-
 
 def index(request):
     kategorie = [
@@ -121,7 +119,7 @@ def pohlavi(request):
 
 def zpusob(request):
     #data = Zpusob.objects.all()
-    data = Zpusob.objects.filter(rok__gte=2018, rok__lte=2022)
+    data = Zpusob.objects.filter(rok__gte=2015, rok__lte=2022)
     roky = data.values_list('rok', flat=True).distinct().order_by('rok')   
     kategorie = data.values("zpusob").distinct()
     for kat in kategorie:
@@ -133,7 +131,7 @@ def zpusob(request):
     for kat in kategorie:
         kategorie2.append({
             "zpusob": kat["zpusob"],
-            "label": Zpusob_popis(kat["zpusob"]).label  # Přidáme popisek jako nový klíč
+            "label": Zpusob_popis(kat["zpusob"]).label  
         })
 
     vsechny_hodnoty = []

@@ -1,15 +1,12 @@
 from django.db import models
 
-#PS C:\Users\Student\python\projekt_urazy> pip freeze > r.txt  -ulozi vsechny pouzite knihovny to textoveho soubru
-#PS C:\Users\Student\python\projekt_urazy> pip install -r r.txt  - naistaluje vsehny ppouzite knihovny ze souboru txt
-
-# agregovana data úrazů:  Počty za jednotivé roky přepočtené na 100 000 obyvatel ČR, kategorie, pohlaví, věku nebo regionu
-
+# projekt_urazy> pip freeze > r.txt  -ulozi vsechny pouzite knihovny to textoveho soubru
+# projekt_urazy> pip install -r r.txt  - naistaluje vsehny ppouzite knihovny ze souboru txt
 
 class Pohlavi(models.Model):
-    pohlavi = models.CharField(max_length=4) 
-    rok = models.IntegerField(null=True, blank=True, default=None) 
-    pocet = models.IntegerField(null=True, blank=True, default=None)   
+    pohlavi = models.CharField(max_length=4) #(F, M)
+    rok = models.IntegerField(null=True, blank=True, default=None) # (roky: 2019, 2022, ..)
+    pocet = models.IntegerField(null=True, blank=True, default=None)  # (počty úrazů: 20283, 33559, ..)
 
     def __str__(self):
         return f"pohlavi: {self.pohlavi}, rok: {self.rok}, počet:{self.pocet}"
@@ -53,9 +50,9 @@ class Zpusob_popis(models.TextChoices):
         return self.label
 
 class Zpusob(models.Model):
-    zpusob = models.CharField(max_length=7, choices=Zpusob_popis.choices)
-    rok = models.IntegerField(null=True, blank=True, default=None)
-    pocet = models.IntegerField(null=True, blank=True, default=None)
+    zpusob = models.CharField(max_length=7, choices=Zpusob_popis.choices) #(Zpusob vzniku urazu: X58_X59,  X50_X57, .. )
+    rok = models.IntegerField(null=True, blank=True, default=None) # (roky: 2019, 2022, ..)
+    pocet = models.IntegerField(null=True, blank=True, default=None) # (počty úrazů: 20283, 33559, ..)
 
     def __str__(self):
         zpusob_label = Zpusob_popis(self.zpusob).label

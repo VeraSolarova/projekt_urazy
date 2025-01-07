@@ -4,8 +4,9 @@
   {% load static %} 
   <link rel="stylesheet" href="{% static '_layout.css' %}">
 
-  <h1>Přehled četnosti úrazů dle pohlaví</h1>
+  <h2>Přehled četnosti úrazů dle pohlaví</h2>
 
+<div class ="center">
   <table>
     <thead>
       <tr>
@@ -32,6 +33,7 @@
       {% endfor %}
     </tbody>
   </table>
+</div>
 
-  <img src="data:image/png;base64,{{ obrazek_grafu }}" alt="Sloupcový graf">
+<img src="data:image/png;base64,{{ obrazek_grafu }}" alt="Sloupcový graf">
 {% endblock %}

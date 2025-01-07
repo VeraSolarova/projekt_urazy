@@ -1,8 +1,5 @@
 from django.contrib import admin
 
-# username: username 
-# password: hesloheslo
-
 from urazy.models import Vek, Pohlavi, Zpusob  
 
 class VekAdmin(admin.ModelAdmin):

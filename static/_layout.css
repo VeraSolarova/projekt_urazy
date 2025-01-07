@@ -1,25 +1,36 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; 
+}
+
 :root {
-  --svetle-modra: #98bad6;
+  --modra: #98bad6;
+  --svetle-modra:#e0effc;
   --svetle-seda: #445563;
   --tmave-seda: #283037;
 }
 
 /*_layout.html*/
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden; 
+}
 
 body {
   font-family: Arial, sans-serif;
-  background: linear-gradient(to bottom, var(--svetle-modra), #fefefe 10vh); 
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
+  background: linear-gradient(to bottom, var(--modra), #fefefe 10vw);
+  background-repeat: no-repeat; 
 }
 
 header {
   display: flex;
-  justify-content: space-between; 
+  justify-content: space-evenly; 
   align-items: baseline;
-  padding: 3vw;
-  margin: 3vw; 
+  padding: 2vw;
+  margin: 0; 
+  width: 100%; 
 }
 
 h1 {
@@ -29,11 +40,17 @@ h1 {
   margin: 0; 
 }
 
-h2 {
+h2{
   color: var(--svetle-seda); 
+  font-size: 30px;
+  padding: 20px;
+  margin: 20px; 
+  text-align: center;
+}
+
+.index-h2{
   font-size: 20px;
-  padding: 5px;
-  margin: 5px; 
+  text-align: left;
 }
 
 nav ul {
@@ -46,7 +63,7 @@ nav ul {
 }
 
 .layout-link {
-  color: var(--tmave-seda); /* Použití var() */
+  color: var(--tmave-seda); 
   text-decoration: none;
   padding: 3vw;
   margin: 3vw;
@@ -77,13 +94,22 @@ margin: 0;
 }
 
 /*tabulky*/
-
 table{
-  width: 80%;
+  max-width: 100%;
   border-collapse: collapse; 
-  margin: 20px 0;
+  margin: 20px auto;
   text-align: left;
   border: 1px solid #00000000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+th{
+  background-color:var(--svetle-modra);
+}
+
+table td:first-child,
+th{
+  font-weight: bold;
 }
 
 table th, table td {
@@ -92,6 +118,40 @@ table th, table td {
   text-align: center;
 }
 
+.table_zpusob td:first-child{
+  text-align: left;
+}
+
+
 tr:hover {
   background-color: #f1f1f1;
+}
+
+/*graf*/
+img {
+  display: block;
+  margin: 20px auto; 
+  max-width: 100%; 
+  height: auto; 
+}
+
+@media (max-width: 900px) {
+  p,table, .index-ul {
+    font-size: 10px; 
+  }
+
+  h1, h2 {
+    font-size: 15px; 
+  }
+
+  table th {
+    position: sticky; 
+    top: 0; 
+    z-index: 1; 
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1); /* Vizuální oddělení */
+  }
+
+  nav ul {
+    font-size: 15px;
+  }
 }
